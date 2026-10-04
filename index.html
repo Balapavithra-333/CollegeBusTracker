@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>College Bus Tracker</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>🚌 College Bus Tracker</h1>
+
+    <p class="subtitle">
+        College Bus Route & Schedule System
+    </p>
+
+
+    <!-- FROM TO SEARCH -->
+
+    <div class="search-card">
+
+        <h2>🔍 Find Your Bus</h2>
+
+        <form method="GET" action="/">
+
+            <div class="search-box">
+
+                <div class="input-group">
+
+                    <label for="from_stop">
+                        From
+                    </label>
+
+                    <select name="from_stop"
+                            id="from_stop"
+                            required>
+
+                        <option value="">
+                            Select Starting Stop
+                        </option>
+
+                        {% for stop in stops %}
+
+                        <option value="{{ stop }}"
+                            {% if stop == from_stop %}
+                            selected
+                            {% endif %}>
+
+                            {{ stop }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="to_stop">
+                        To
+                    </label>
+
+                    <select name="to_stop"
+                            id="to_stop"
+                            required>
+
+                        <option value="">
+                            Select Destination
+                        </option>
+
+                        {% for stop in stops %}
+
+                        <option value="{{ stop }}"
+                            {% if stop == to_stop %}
+                            selected
+                            {% endif %}>
+
+                            {{ stop }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <button type="submit"
+                        class="search-button">
+
+                    🔍 Find Bus
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- SEARCH RESULTS -->
+
+    {% if from_stop and to_stop %}
+
+    <div class="results-card">
+
+        <h2>
+            🚌 Available Buses
+        </h2>
+
+        <p>
+            <strong>{{ from_stop }}</strong>
+            →
+            <strong>{{ to_stop }}</strong>
+        </p>
+
+
+        {% if search_results %}
+
+            {% for result in search_results %}
+
+            <div class="result">
+
+                <h3>
+                    🚌 Bus {{ result.number }}
+                </h3>
+
+
+                <p>
+                    <strong>Route:</strong>
+                    {{ result.route }}
+                </p>
+
+
+                <!-- DEPARTURE / ARRIVAL INFORMATION -->
+
+                <div class="result-info">
+
+                    <div>
+
+                        <span>
+                            🚏 Departure from
+                        </span>
+
+                        <strong>
+                            {{ result.from_stop }}
+                        </strong>
+
+                        <small>
+                            🕐 {{ result.departure_time }}
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            🏁 Arrival at
+                        </span>
+
+                        <strong>
+                            {{ result.to_stop }}
+                        </strong>
+
+                        <small>
+                            🕐 {{ result.arrival_time }}
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ⏱️ Journey Time
+                        </span>
+
+                        <strong>
+                            {{ result.journey_time }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROUTE STOPS -->
+
+                <div class="route-stops">
+
+                    <strong>
+                        Stops:
+                    </strong>
+
+                    {% for stop in result.stops %}
+
+                        <span class="stop">
+                            {{ stop }}
+                        </span>
+
+                        {% if not loop.last %}
+
+                            <span class="arrow">
+                                →
+                            </span>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- TRACK BUTTON -->
+
+                <a href="/track/{{ result.id }}?from_stop={{ result.from_stop }}"
+                   class="button track-button">
+
+                    🚍 Track This Bus
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <div class="no-results">
+
+                ❌ No buses found for this route.
+
+                <p>
+                    Try selecting a different starting
+                    point and destination.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- BUS TRACKING -->
+
+    {% if not from_stop and not to_stop and bus %}
+
+    <div class="bus-card">
+
+        <h2>
+            🚌 Bus {{ bus.number }}
+        </h2>
+
+
+        <p>
+
+            <strong>
+                Route:
+            </strong>
+
+            {{ bus.route }}
+
+        </p>
+
+
+        <div class="info">
+
+            <div>
+
+                <span>
+                    📍 Current Stop
+                </span>
+
+                <strong>
+                    {{ bus.current_stop }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ➡️ Next Stop
+                </span>
+
+                <strong>
+                    {{ bus.next_stop }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ⏱️ ETA
+                </span>
+
+                <strong>
+                    {{ bus.eta }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    🟢 Status
+                </span>
+
+                <strong>
+                    {{ bus.status }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <a href="/next"
+               class="button">
+
+                🚍 Move to Next Stop
+
+            </a>
+
+
+            <a href="/reset"
+               class="button reset">
+
+                🔄 Reset Simulation
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+</body>
+
+</html>
