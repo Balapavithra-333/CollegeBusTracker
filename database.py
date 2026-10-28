@@ -3,13 +3,9 @@ import sqlite3
 
 
 def create_database():
-
     conn = sqlite3.connect("bus_tracker.db")
     cursor = conn.cursor()
 
-    # -----------------------------
-    # Create Buses Table
-    # -----------------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS buses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,9 +14,6 @@ def create_database():
         )
     """)
 
-    # -----------------------------
-    # Create Stops Table
-    # -----------------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS stops (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,24 +24,14 @@ def create_database():
         )
     """)
 
-    # -----------------------------
     # Clear old sample data
-    # -----------------------------
     cursor.execute("DELETE FROM stops")
     cursor.execute("DELETE FROM buses")
 
-    # Reset ID counters
-    cursor.execute(
-        "DELETE FROM sqlite_sequence WHERE name='buses'"
-    )
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='buses'")
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='stops'")
 
-    cursor.execute(
-        "DELETE FROM sqlite_sequence WHERE name='stops'"
-    )
-
-    # -----------------------------
-    # BUS 101
-    # -----------------------------
+    # Bus 101
     cursor.execute("""
         INSERT INTO buses (bus_number, route)
         VALUES (?, ?)
@@ -56,7 +39,6 @@ def create_database():
         "101",
         "Tadepalligudem → Tanuku → Undi → Bhimavaram"
     ))
-
     bus_101_id = cursor.lastrowid
 
     stops_101 = [
@@ -70,14 +52,9 @@ def create_database():
         INSERT INTO stops
         (bus_id, stop_name, arrival_time, stop_order)
         VALUES (?, ?, ?, ?)
-    """, [
-        (bus_101_id, stop[0], stop[1], stop[2])
-        for stop in stops_101
-    ])
+    """, [(bus_101_id, *stop) for stop in stops_101])
 
-    # -----------------------------
-    # BUS 102
-    # -----------------------------
+    # Bus 102
     cursor.execute("""
         INSERT INTO buses (bus_number, route)
         VALUES (?, ?)
@@ -85,7 +62,6 @@ def create_database():
         "102",
         "Tadepalligudem → Nidadavole → Tanuku → Bhimavaram"
     ))
-
     bus_102_id = cursor.lastrowid
 
     stops_102 = [
@@ -99,14 +75,9 @@ def create_database():
         INSERT INTO stops
         (bus_id, stop_name, arrival_time, stop_order)
         VALUES (?, ?, ?, ?)
-    """, [
-        (bus_102_id, stop[0], stop[1], stop[2])
-        for stop in stops_102
-    ])
+    """, [(bus_102_id, *stop) for stop in stops_102])
 
-    # -----------------------------
-    # BUS 103
-    # -----------------------------
+    # Bus 103
     cursor.execute("""
         INSERT INTO buses (bus_number, route)
         VALUES (?, ?)
@@ -114,7 +85,6 @@ def create_database():
         "103",
         "Tanuku → Undi → Bhimavaram → College"
     ))
-
     bus_103_id = cursor.lastrowid
 
     stops_103 = [
@@ -128,12 +98,8 @@ def create_database():
         INSERT INTO stops
         (bus_id, stop_name, arrival_time, stop_order)
         VALUES (?, ?, ?, ?)
-    """, [
-        (bus_103_id, stop[0], stop[1], stop[2])
-        for stop in stops_103
-    ])
+    """, [(bus_103_id, *stop) for stop in stops_103])
 
-    # Save changes
     conn.commit()
     conn.close()
 
@@ -141,4 +107,5 @@ def create_database():
     print("3 sample buses and their stops have been added.")
 
 
-create_database()
+if __name__ == "__main__":
+    create_database()

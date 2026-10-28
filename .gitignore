@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 __pycache__/
 *.py[cod]
@@ -5,3 +6,9 @@ __pycache__/
 venv/
 .env
 bus_tracker.db
+=======
+__pycache__/
+*.pyc
+bus_tracker.db
+.venv/
+>>>>>>> 4b52dc11f59b34199fbc47b59595f4ee849736cd
