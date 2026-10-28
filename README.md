@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# College Bus Route & Schedule Tracking System
+# 🚌 College Bus Route & Schedule Tracking System
 
 ## Overview
 
@@ -31,44 +30,21 @@ The system allows users to search for buses between two stops and view scheduled
 
 ## How to Run
 
-Install Flask:
+1. Open a terminal in the project folder.
+2. Install Flask:
 
-```bash
-=======
-# College Bus Route & Schedule Tracking System
+   ```bash
+   pip install flask
+   ```
 
-## Overview
+3. Start the application:
 
-A web-based college bus route and schedule system developed using Python, Flask, HTML, CSS, and SQLite.
+   ```bash
+   python app.py
+   ```
 
-The system allows users to search for buses between two stops and view scheduled departure and arrival times.
+4. Open `http://127.0.0.1:5000` in your browser.
 
-## Features
+## Project Note
 
-- From-to bus route search
-- Multiple bus routes and stops
-- Departure and arrival time display
-- Journey time calculation
-- Intermediate stop display
-- Bus tracking simulation
-- Current stop and next stop information
-- ETA display
-- Bus status
-- SQLite database storage
-- Simple and user-friendly interface
-
-## Technologies Used
-
-- Python
-- Flask
-- HTML
-- CSS
-- SQLite
-
-## How to Run
-
-Install Flask:
-
-```bash
->>>>>>> 4b52dc11f59b34199fbc47b59595f4ee849736cd
-pip install flask
+This project simulates college bus routes and movement. It does not provide real-time GPS tracking.
